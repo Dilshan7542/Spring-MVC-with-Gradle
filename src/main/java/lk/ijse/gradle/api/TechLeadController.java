@@ -14,13 +14,37 @@ public class TechLeadController {
     @Autowired
     TechLeadService techLeadService;
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseUtil saveTechLead(@RequestBody TechLeadDTO techLeadDTO){
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseUtil saveTechLead(@RequestBody TechLeadDTO techLeadDTO){
         System.out.println("JSON");
         return new ResponseUtil("202","Successfully",techLeadService.saveTechLead(techLeadDTO));
     }
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,path = "image")
+    public ResponseUtil saveTechLeadWithImage(
+            @RequestPart String id,
+            @RequestPart String name,
+            @RequestPart String address,
+            @RequestPart byte[] image
+            ){
+        return new ResponseUtil("202","Successfully",techLeadService.saveTechLead(new TechLeadDTO(id,name,address,image)));
+    }
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseUtil updateTechLead(@RequestBody TechLeadDTO techLeadDTO){
+        System.out.println(techLeadDTO.getName());
+        System.out.println(techLeadDTO);
+        return new ResponseUtil("202","Successfully",techLeadService.updateTechLead(techLeadDTO));
+    }
     @GetMapping(path = "search",params = "id",produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseUtil searchTechLead(@RequestParam String id){
+   public ResponseUtil searchTechLead(@RequestParam String id){
         return new ResponseUtil("202","Successfully",techLeadService.searchTechLead(id));
+    }
+    @GetMapping
+    public ResponseUtil getAllTechLead(){
+        return new ResponseUtil("202","Successfully",techLeadService.getAllTechLead());
+    }
+    @DeleteMapping(path = "delete",params = "id")
+    public ResponseUtil deleteTechLead(@RequestParam String id){
+        techLeadService.deleteTechLead(id);
+        return new ResponseUtil("202","Successfully",null);
     }
 }

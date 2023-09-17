@@ -5,6 +5,7 @@ import lk.ijse.gradle.entity.TechLead;
 import lk.ijse.gradle.repo.TechLeadRepositories;
 import lk.ijse.gradle.service.TechLeadService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,11 +47,14 @@ public class TechLeadServiceImpl implements TechLeadService {
 
     @Override
     public void deleteTechLead(String id) {
-
+        if(!techLeadRepositories.existsById(id)){
+            throw new RuntimeException("Tech Lead Not Exists..!");
+        }
+        techLeadRepositories.deleteById(id);
     }
 
     @Override
     public List<TechLeadDTO> getAllTechLead() {
-        return null;
+   return  map.map( techLeadRepositories.findAll(),new TypeToken<List<TechLeadDTO>>(){}.getType());
     }
 }

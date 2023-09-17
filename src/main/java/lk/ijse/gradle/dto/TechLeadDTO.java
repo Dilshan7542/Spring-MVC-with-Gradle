@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 import java.util.List;
 
 @AllArgsConstructor
@@ -16,5 +13,14 @@ import java.util.List;
 public class TechLeadDTO {
     String id;
     String name;
+    String address;
+    byte[] image;
     List<Project> projectList;
+
+    public TechLeadDTO(String id, String name, String address, byte[] image) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.image = image;
+    }
 }

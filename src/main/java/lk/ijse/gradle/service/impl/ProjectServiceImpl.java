@@ -5,6 +5,7 @@ import lk.ijse.gradle.entity.Project;
 import lk.ijse.gradle.repo.ProjectRepositories;
 import lk.ijse.gradle.service.ProjectService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,16 +39,22 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDTO searchProject(String id) {
+        if(!projectRepo.existsById(id)){
+            throw new RuntimeException("Project Not Exists..!");
+        }
         return map.map(projectRepo.findById(id),ProjectDTO.class);
     }
 
     @Override
     public void deleteProject(String id) {
-
+        if(!projectRepo.existsById(id)){
+            throw new RuntimeException("Project Not Exists..!");
+        }
+        projectRepo.deleteById(id);
     }
 
     @Override
     public List<ProjectDTO> getAllProject() {
-        return null;
+       return map.map(projectRepo.findAll(),new TypeToken<List<ProjectDTO>>(){}.getType());
     }
 }
