@@ -11,11 +11,15 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class TechLeadDTO {
+    public TechLeadDTO(String id) {
+        this.id = id;
+    }
+
     String id;
     String name;
     String address;
     byte[] image;
-    List<Project> projectList;
+    List<ProjectDTO> projectList;
 
     public TechLeadDTO(String id, String name, String address, byte[] image) {
         this.id = id;

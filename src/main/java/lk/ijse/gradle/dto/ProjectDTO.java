@@ -16,5 +16,5 @@ public class ProjectDTO {
     String name;
     String description;
     int memberCount;
-    TechLead techLead;
+    TechLeadDTO techLead;
 }

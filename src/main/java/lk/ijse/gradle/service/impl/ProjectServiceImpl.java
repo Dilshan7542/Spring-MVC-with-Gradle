@@ -24,6 +24,7 @@ public class ProjectServiceImpl implements ProjectService {
         if(projectRepo.existsById(projectDTO.getProjectID())){
             throw new RuntimeException("Project Already Exists..!");
         }
+
         projectRepo.save(map.map(projectDTO, Project.class));
         return projectDTO;
     }
@@ -50,7 +51,8 @@ public class ProjectServiceImpl implements ProjectService {
         if(!projectRepo.existsById(id)){
             throw new RuntimeException("Project Not Exists..!");
         }
-        projectRepo.deleteById(id);
+        System.out.println(id);
+        projectRepo.delete(projectRepo.findById(id).get());
     }
 
     @Override

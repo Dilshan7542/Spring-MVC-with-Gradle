@@ -16,7 +16,6 @@ public class TechLeadController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
    public ResponseUtil saveTechLead(@RequestBody TechLeadDTO techLeadDTO){
-        System.out.println("JSON");
         return new ResponseUtil("202","Successfully",techLeadService.saveTechLead(techLeadDTO));
     }
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE,path = "image")
@@ -30,8 +29,6 @@ public class TechLeadController {
     }
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseUtil updateTechLead(@RequestBody TechLeadDTO techLeadDTO){
-        System.out.println(techLeadDTO.getName());
-        System.out.println(techLeadDTO);
         return new ResponseUtil("202","Successfully",techLeadService.updateTechLead(techLeadDTO));
     }
     @GetMapping(path = "search",params = "id",produces = MediaType.APPLICATION_JSON_VALUE)

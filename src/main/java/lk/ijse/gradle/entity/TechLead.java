@@ -26,7 +26,7 @@ public class TechLead implements SuperEntity {
     @Lob
     @JoinColumn(nullable = false)
     byte[] image;
-    @OneToMany(mappedBy = "techLead", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "techLead", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<Project> projectList;
 
 }
