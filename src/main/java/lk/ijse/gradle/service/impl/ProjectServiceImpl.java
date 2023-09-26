@@ -4,12 +4,15 @@ import lk.ijse.gradle.dto.ProjectDTO;
 import lk.ijse.gradle.entity.Project;
 import lk.ijse.gradle.repo.ProjectRepositories;
 import lk.ijse.gradle.service.ProjectService;
+import org.hibernate.Session;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
@@ -19,6 +22,9 @@ public class ProjectServiceImpl implements ProjectService {
     ProjectRepositories projectRepo;
     @Autowired
     ModelMapper map;
+    @PersistenceContext
+    EntityManager entityManager;
+
     @Override
     public ProjectDTO saveProject(ProjectDTO projectDTO) {
         if(projectRepo.existsById(projectDTO.getProjectID())){
@@ -43,7 +49,10 @@ public class ProjectServiceImpl implements ProjectService {
         if(!projectRepo.existsById(id)){
             throw new RuntimeException("Project Not Exists..!");
         }
-        return map.map(projectRepo.findById(id),ProjectDTO.class);
+        Project project = projectRepo.findById(id).get();
+        entityManager.detach(project);
+        project.getTechLead().setProjectList(null);
+        return map.map(project,ProjectDTO.class);
     }
 
     @Override
@@ -57,6 +66,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDTO> getAllProject() {
-       return map.map(projectRepo.findAll(),new TypeToken<List<ProjectDTO>>(){}.getType());
+        List<Project> list = projectRepo.findAll();
+        for (Project project : list) {
+            project.getTechLead().setProjectList(null);
+        }
+
+        return map.map(list,new TypeToken<List<ProjectDTO>>(){}.getType());
     }
 }

@@ -1,10 +1,7 @@
 package lk.ijse.gradle.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -15,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@ToString
 @DynamicUpdate
 public class TechLead implements SuperEntity {
     @Id
@@ -26,7 +24,7 @@ public class TechLead implements SuperEntity {
     @Lob
     @JoinColumn(nullable = false)
     byte[] image;
-    @OneToMany(mappedBy = "techLead", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "techLead",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     List<Project> projectList;
 
 }

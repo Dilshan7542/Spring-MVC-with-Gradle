@@ -19,6 +19,6 @@ public class Project implements SuperEntity {
     String description;
     int memberCount;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "techLeadID")
+    @JoinColumn(name = "techLeadID",referencedColumnName = "id")
     TechLead techLead;
 }

@@ -1,6 +1,8 @@
 package lk.ijse.gradle.service.impl;
 
+import lk.ijse.gradle.dto.ProjectDTO;
 import lk.ijse.gradle.dto.TechLeadDTO;
+import lk.ijse.gradle.entity.Project;
 import lk.ijse.gradle.entity.TechLead;
 import lk.ijse.gradle.repo.TechLeadRepositories;
 import lk.ijse.gradle.service.TechLeadService;
@@ -10,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -19,6 +24,8 @@ public class TechLeadServiceImpl implements TechLeadService {
     TechLeadRepositories techLeadRepositories;
     @Autowired
     ModelMapper map;
+    @PersistenceContext
+    EntityManager entityManager;
     @Override
     public TechLeadDTO saveTechLead(TechLeadDTO techLead) {
         if(techLeadRepositories.existsById(techLead.getId())){
@@ -42,7 +49,12 @@ public class TechLeadServiceImpl implements TechLeadService {
         if(!techLeadRepositories.existsById(id)){
             throw new RuntimeException("Tech Lead Not Exists..!");
         }
-        return map.map(techLeadRepositories.findById(id),TechLeadDTO.class);
+        TechLead techLead = techLeadRepositories.findById(id).get();
+        entityManager.detach(techLead);
+        for (Project project : techLead.getProjectList()) {
+            project.setTechLead(new TechLead());
+        }
+        return map.map(techLead, TechLeadDTO.class);
     }
 
     @Override
@@ -55,6 +67,11 @@ public class TechLeadServiceImpl implements TechLeadService {
 
     @Override
     public List<TechLeadDTO> getAllTechLead() {
-   return  map.map( techLeadRepositories.findAll(),new TypeToken<List<TechLeadDTO>>(){}.getType());
+        List<TechLead> list = techLeadRepositories.findAll();
+        for (TechLead techLead : list) {
+            techLead.setProjectList(null);
+
+        }
+        return  map.map( list,new TypeToken<List<TechLeadDTO>>(){}.getType());
     }
 }
